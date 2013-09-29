@@ -1,0 +1,63 @@
+/*/*
+ * main.c
+ *
+ *  Created on : 08/06/2012
+ *      Author: Daniel
+ */
+
+
+
+#include "LPC214x.h"
+#include "cpu_init.h"
+#include "Modules/pwm.h"
+#include "Modules/adc.h"
+#include "Modules/functions.h"
+#include "Modules/uart.h"
+#include "Modules/iprintf.h"
+
+int main (void)
+{
+	cpu_init();
+	unsigned int setpoint_motor1;
+	unsigned int reostato_motor1;
+	//unsigned int proporcional_motor1;
+	//unsigned int dutycycle_motor1;
+
+	setGPIOFunction();
+	PWMConfiguration_02(1000);
+	ADCInit( ADC_CLK );
+	//UART_Init(0,9600);
+	//int i=0;
+	//iprintf("Test");
+	while (1)
+	{
+
+		reostato_motor1 = ADC0Read(2);
+		setpoint_motor1 = ((reostato_motor1*100)/1024);
+		//iprintf("ADC: %d\r\n", reostato_motor1);
+
+		/*if(setpoint_motor1 >= reostato_motor1)
+		{
+			IOCLR0 = (1<<19);
+			IOSET0 = (1<<18);
+			setDutyCycle_PWM2(1000, (setpoint_motor1 - reostato_motor1)*100/1024);
+		}
+
+		if(reostato_motor1 > setpoint_motor1)
+		{
+			IOCLR0 = (1<<18);
+			IOSET0 = (1<<19);
+			setDutyCycle_PWM2(1000, (reostato_motor1 - setpoint_motor1)*100/1024);
+		}*/
+
+		setDutyCycle(2,75);
+		//for(int i=0; i<500000;i++)
+		//{
+		//	asm volatile("NOP");
+		//	asm volatile("NOP");
+		//	asm volatile("NOP");
+		//}
+	}
+
+	return(0);
+}
